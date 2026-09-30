@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MIRPE — Metodología de Inteligencia del Riesgo para la Protección Ejecutiva</title>
+<meta name="description" content="MIRPE es la metodología que estandariza la evaluación de riesgo en protección ejecutiva. SIGPE es el software que la ejecuta en terreno.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<!-- Pega aquí tu favicon cuando lo tengas: <link rel="icon" href="favicon.png"> -->
+<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<!-- SDK de PayPal — reemplaza el client-id por el tuyo, ver README.md sección "Pagos" -->
+<script src="https://www.paypal.com/sdk/js?client-id=https://www.paypal.com/ncp/payment/XV3EBGZS9BG8J&currency=USD"></script>
+</head>
+
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a href="#" class="brand">
+      <!-- Reemplaza esto por tu logo real: <img src="logo.png" alt="MIRPE" class="brand-logo"> -->
+      <img src="logo_mirpe.jpg" alt="MIRPE" class="brand-logo" onerror="this.style.display='none'">
+      <span class="brand-text">
+        MIRPE<span>.</span>
+        <span class="brand-sub">Para la Protección de Personas Importantes</span>
+      </span>
+    </a>
+    <nav class="main-nav" aria-label="Navegación principal">
+      <a href="#metodologia">Metodología</a>
+      <a href="#quienes-somos">Quiénes somos</a>
+      <a href="#sigpe">SIGPE</a>
+      <a href="#cursos">Cursos</a>
+      <a href="#blog">Blog</a>
+      <a href="#faq">Preguntas frecuentes</a>
+      <a href="#contacto">Contacto</a>
+    </nav>
+    <button class="nav-toggle" aria-label="Abrir menú" aria-expanded="false" id="navToggle">☰</button>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<section class="hero" style="border-bottom:1px solid var(--border-soft); padding-top:96px;">
+  <div class="container">
+    <div>
+      <p class="eyebrow">MIRPE — Metodología de Inteligencia del Riesgo para la Protección Ejecutiva
+</p>
+      <h1>La evolución de la Protección Ejecutiva.</h1>
+      <p class="hero-sub">
+        En las últimas décadas, la protección ejecutiva ha evolucionado desde un enfoque eminentemente reactivo, centrado en la presencia de escoltas y medidas físicas de seguridad, hacia un modelo preventivo basado en la gestión integral del riesgo.
+      </p>
+
+     <img src="convoy02.png" alt="Equipo MIRPE en operación" class="photo-slot">  
+
+      <p class="hero-highlight">
+        <strong>Metodología, no criterio individual</strong> — MIRPE estandariza cómo tu equipo evalúa riesgo y toma decisiones, basado en normas internacionales de referencia, 
+        como ISO 31000 para la gestión del riesgo, ISO 22301 para la continuidad del negocio, ISO 22320 para la gestión de incidentes y las guías 
+        de ASIS International sobre protección ejecutiva y seguridad física, actualmente no existe una metodología ampliamente difundida que integre 
+        de forma estructurada los componentes médicos, familiares, operacionales, logísticos, tecnológicos y de inteligencia propios de una misión de protección ejecutiva.
+      </p>
+      <div class="hero-actions">
+        <a href="#audiencia" class="btn btn-primary">Elige tu perfil</a>
+        <a href="#sigpe" class="btn btn-secondary">Ver SIGPE en acción</a>
+      </div>
+    </div>
+
+    <div class="hero-visuals">
+      <!-- ============ GRÁFICO DE BARRAS 3D — ATAQUES DE ALTO PERFIL ============ -->
+      <section>
+        <div style="background-color:#0b0f19; padding:20px; border-radius:12px; border:1px solid #1e293b; width:100%; max-width:680px; margin:0 auto; box-sizing:border-box; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+          <h3 style="color:#f8fafc; font-size:1.1rem; margin-top:0; margin-bottom:15px; text-align:left;">Ataques de alto perfil contra líderes políticos y empresarios (2021–2026)</h3>
+
+          <div id="ataques-3d-container" style="width:100%; height:430px; position:relative; background:transparent; cursor:grab;"></div>
+
+          <!-- Checkbox: eventos pendientes de verificación -->
+          <label style="display:flex; align-items:center; gap:6px; margin-top:10px; font-size:0.8rem; color:#94a3b8; cursor:pointer; user-select:none;">
+            <input type="checkbox" id="chk-nv" checked style="accent-color:#f59e0b;">
+            Incluir eventos pendientes de verificación (†)
+          </label>
+
+          <!-- Leyenda de categorías -->
+          <div style="display:flex; justify-content:center; gap:18px; margin-top:12px; font-size:0.8rem; color:#94a3b8; flex-wrap:wrap;">
+            <span style="display:flex;align-items:center;gap:5px;"><span style="width:8px;height:8px;background:#e74c3c;border-radius:50%;display:inline-block;"></span> Jefes de Estado o Gobierno</span>
+            <span style="display:flex;align-items:center;gap:5px;"><span style="width:8px;height:8px;background:#f39c12;border-radius:50%;display:inline-block;"></span> Candidatos y activistas</span>
+            <span style="display:flex;align-items:center;gap:5px;"><span style="width:8px;height:8px;background:#3498db;border-radius:50%;display:inline-block;"></span> CEOs y corporaciones</span>
+          </div>
+
+          <!-- Recuadro ACLED (fuera de escala del gráfico) -->
+          <div style="margin-top:14px; padding:10px 12px; background:#0f172a; border:1px solid #1e293b; border-radius:8px; font-size:0.78rem; color:#cbd5e1; text-align:left;">
+            <b style="color:#f8fafc;">ACLED:</b> 13.900 ataques contra funcionarios locales en 138 países (2021–2026) · 2.653 incidentes solo en 2025 (no incluidos en el gráfico por diferencia de escala).
+          </div>
+
+          <p style="margin:12px 0 0; font-size:0.72rem; color:#64748b; text-align:left;">
+            * Sobrevivió al atentado. &nbsp;† Evento pendiente de verificación independiente (barras semi-transparentes).<br>
+            Arrastra el gráfico para rotarlo. Fuentes: ACLED · IPU/ONU · Reuters · Business Insider · Wikipedia.
+          </p>
+        </div>
+      </section>
+
+      <!-- ============ GRÁFICO CIRCULAR — ÍNDICE DE RIESGO (restablecido) ============ -->
+      <div class="risk-gauge-card">
+        <h3 style="color: #f8fafc; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 1.1rem; margin-top: 0; margin-bottom: 15px; text-align: left;">Índice de riesgo de la operación</h3>
+        <div id="risk-3d-container" style="width: 100%; height: 280px; position: relative; background: transparent;"></div>
+        <div style="display: flex; justify-content: center; gap: 20px; margin-top: 15px; font-size: 0.8rem; color: #94a3b8; font-family: 'Segoe UI', sans-serif;">
+          <span style="display: flex; align-items: center; gap: 5px;"><span style="width: 8px; height: 8px; background: #10b981; border-radius: 50%;"></span> Riesgo bajo</span>
+          <span style="display: flex; align-items: center; gap: 5px;"><span style="width: 8px; height: 8px; background: #f59e0b; border-radius: 50%;"></span> Riesgo medio</span>
+          <span style="display: flex; align-items: center; gap: 5px;"><span style="width: 8px; height: 8px; background: #ef4444; border-radius: 50%;"></span> Riesgo alto</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+(function () {
+  var cont = document.getElementById('ataques-3d-container');
+  if (!cont) return;
+
+  /* ================================================================
+     EDITA AQUÍ TUS DATOS (equivalente al script de Python)
+     c: categoría (0-2) · a: año (0-5) · n: n.º de ataques
+     t: etiqueta (\n = salto de línea) · nv: pendiente de verificación
+     ================================================================ */
+  var anios      = [2021, 2022, 2023, 2024, 2025, 2026];
+  var categorias = [['Jefes de Estado', 'o de Gobierno'],
+                    ['Candidatos y', 'activistas políticos'],
+                    ['CEOs y', 'corporaciones']];
+  var coloresCat = ['#e74c3c', '#f39c12', '#3498db'];   // rojo / naranja / azul
+
+  var eventos = [
+    { c: 0, a: 0, n: 1, t: 'Jovenel Moïse\n(Haití)' },
+    { c: 0, a: 1, n: 1, t: 'Shinzo Abe\n(Japón)' },
+    { c: 0, a: 3, n: 1, t: 'Robert Fico\n(Eslovaquia) *' },
+    { c: 1, a: 2, n: 1, t: 'F. Villavicencio\n(Ecuador)' },
+    { c: 1, a: 3, n: 2, t: 'Donald Trump\n(EE. UU.) ×2 *' },
+    { c: 1, a: 4, n: 1, t: 'Charlie Kirk\n(EE. UU.) †', nv: true },
+    { c: 2, a: 3, n: 1, t: 'Brian Thompson\n(UnitedHealthcare)' },
+    { c: 2, a: 5, n: 1, t: 'Kimberly-Clark\n(EE. UU.) †', nv: true }
+  ];
+  /* ================================================================ */
+
+  var chk = document.getElementById('chk-nv');
+  var incluirNV = chk ? chk.checked : true;
+
+  // ---------- Respaldo sin WebGL: tabla HTML ----------
+  function fallback() {
+    var html = '<div style="overflow-x:auto;"><table style="border-collapse:collapse;font-size:0.75rem;color:#cbd5e1;width:100%;">';
+    html += '<tr><th></th>' + anios.map(function (a) {
+      return '<th style="padding:6px 8px;color:#94a3b8;border-bottom:1px solid #1e293b;">' + a + '</th>';
+    }).join('') + '</tr>';
+    categorias.forEach(function (cat, i) {
+      html += '<tr><td style="padding:6px 8px;color:#94a3b8;border-bottom:1px solid #1e293b;white-space:nowrap;">' + cat.join(' ') + '</td>';
+      anios.forEach(function (_, j) {
+        var evs = eventos.filter(function (e) { return e.c === i && e.a === j && (!e.nv || incluirNV); });
+        var txt  = evs.length ? evs.map(function (e) { return e.t.split('\n').join(' '); }).join('<br>') : '—';
+        var fondo = evs.length ? coloresCat[i] : '#0f172a';
+        var col   = evs.length ? '#0b0f19' : '#334155';
+        html += '<td style="padding:6px 4px;text-align:center;border-bottom:1px solid #1e293b;background:' + fondo + ';color:' + col + ';">' + txt + '</td>';
+      });
+      html += '</tr>';
+    });
+    cont.innerHTML = html + '</table></div>';
+  }
+
+  if (typeof THREE === 'undefined') { fallback(); return; }
+  var renderer;
+  try { renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true }); }
+  catch (e) { fallback(); return; }
+
+  var W = cont.clientWidth || 600, H = cont.clientHeight || 430;
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.setSize(W, H);
+  renderer.domElement.style.display = 'block';
+  renderer.domElement.style.touchAction = 'none';
+  cont.appendChild(renderer.domElement);
+
+  var scene  = new THREE.Scene();
+  var camera = new THREE.PerspectiveCamera(42, W / H, 0.1, 100);
+  scene.add(new THREE.AmbientLight(0xffffff, 0.55));
+  var luz = new THREE.DirectionalLight(0xffffff, 0.9);
+  luz.position.set(4, 8, 5);
+  scene.add(luz);
+
+  // ---------- Dimensiones (equivalente a bar3d de matplotlib) ----------
+  var SX = 1.7, SZ = 1.9, HU = 1.05;              // separación X, Z y altura por ataque
+  function px(j) { return (j - (anios.length - 1) / 2) * SX; }
+  function pz(i) { return (i - (categorias.length - 1) / 2) * SZ; }
+  var xMin = px(0) - 0.8, xMax = px(anios.length - 1) + 0.8;
+  var zMin = pz(0) - 0.8, zMax = pz(categorias.length - 1) + 0.8;
+
+  var root = new THREE.Group();
+  scene.add(root);
+
+  // Suelo y líneas de nivel (y=1, y=2)
+  var suelo = new THREE.Mesh(
+    new THREE.PlaneGeometry(xMax - xMin + 0.4, zMax - zMin + 0.4),
+    new THREE.MeshBasicMaterial({ color: 0x0d1526 })
+  );
+  suelo.rotation.x = -Math.PI / 2;
+  root.add(suelo);
+
+  function marcoNivel(y, op) {
+    var pts = [new THREE.Vector3(xMin, y, zMin), new THREE.Vector3(xMax, y, zMin),
+               new THREE.Vector3(xMax, y, zMax), new THREE.Vector3(xMin, y, zMax)];
+    return new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints(pts),
+             new THREE.LineBasicMaterial({ color: 0x334155, transparent: true, opacity: op }));
+  }
+  root.add(marcoNivel(0.001, 0.9));
+  root.add(marcoNivel(HU, 0.35));
+  root.add(marcoNivel(HU * 2, 0.35));
+
+  // ---------- Texto como sprite ----------
+  function textoSprite(lineas, op) {
+    op = op || {};
+    var fs = op.fs || 40;
+    var canvas = document.createElement('canvas');
+    var ctx = canvas.getContext('2d');
+    var font = (op.negrita ? '700 ' : '400 ') + fs + 'px "Segoe UI", Arial, sans-serif';
+    ctx.font = font;
+    var w = 0;
+    lineas.forEach(function (l) { w = Math.max(w, ctx.measureText(l).width); });
+    canvas.width  = Math.ceil(w) + 20;
+    canvas.height = Math.ceil(lineas.length * fs * 1.25) + 12;
+    ctx.font = font; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillStyle = op.color || '#f8fafc';
+    lineas.forEach(function (l, i) { ctx.fillText(l, canvas.width / 2, fs * 1.25 * (i + 0.5)); });
+    var tex = new THREE.CanvasTexture(canvas);
+    tex.minFilter = THREE.LinearFilter;
+    var spr = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true }));
+    var k = (op.escala || 1) / 300;
+    spr.scale.set(canvas.width * k, canvas.height * k, 1);
+    return spr;
+  }
+
+  // Etiquetas de años (frente), categorías (izquierda) y niveles del eje Y
+  anios.forEach(function (a, j) {
+    var s = textoSprite([String(a)], { fs: 44, color: '#94a3b8', escala: 1.15 });
+    s.position.set(px(j), -0.32, zMax + 0.55);
+    root.add(s);
+  });
+  categorias.forEach(function (cat, i) {
+    var s = textoSprite(cat, { fs: 32, color: '#cbd5e1', escala: 0.95 });
+    s.position.set(xMin - 1.5, 0.25, pz(i));
+    root.add(s);
+  });
+  [1, 2].forEach(function (n) {
+    var s = textoSprite([String(n)], { fs: 30, color: '#64748b', escala: 0.7 });
+    s.position.set(xMin - 0.7, n * HU, zMin - 0.5);
+    root.add(s);
+  });
+
+  // ---------- Barras (grupo dinámico, reconstruible con el checkbox) ----------
+  var grupoBarras = new THREE.Group();
+  root.add(grupoBarras);
+  var barras = [];
+
+  function construirBarras(incluirNV) {
+    while (grupoBarras.children.length) {
+      var o = grupoBarras.children[0];
+      grupoBarras.remove(o);
+      if (o.geometry) o.geometry.dispose();
+      if (o.material) { if (o.material.map) o.material.map.dispose(); o.material.dispose(); }
+    }
+    barras = [];
+    eventos.forEach(function (ev) {
+      if (ev.nv && !incluirNV) return;
+      var h = ev.n * HU;
+      var mat = new THREE.MeshPhongMaterial({
+        color: new THREE.Color(coloresCat[ev.c]),
+        shininess: 40,
+        transparent: !!ev.nv, opacity: ev.nv ? 0.6 : 1      // † semi-transparente
+      });
+      var m = new THREE.Mesh(new THREE.BoxGeometry(0.95, h, 0.95), mat);
+      m.position.set(px(ev.a), h / 2, pz(ev.c));
+      m.userData = { texto: ev.t.split('\n').join(' ') + (ev.n > 1 ? ' (' + ev.n + ' atentados)' : '') };
+      grupoBarras.add(m);
+      barras.push(m);
+      var spr = textoSprite(ev.t.split('\n'), {
+        fs: 34, negrita: true, escala: 0.85,
+        color: ev.nv ? '#94a3b8' : '#f8fafc'
+      });
+      spr.position.set(px(ev.a), h + 0.32, pz(ev.c));
+      grupoBarras.add(spr);
+    });
+  }
+  construirBarras(incluirNV);
+  if (chk) chk.addEventListener('change', function () { construirBarras(chk.checked); });
+
+  // ---------- Cámara orbital ----------
+  var theta = 0.75, phi = 1.05, radius = 12;
+  function ajustarRadio() {
+    var a = W / H;
+    radius = a > 1.4 ? 11.5 : a > 1 ? 13.5 : 17;   // más lejos en pantallas estrechas
+  }
+  ajustarRadio();
+  function updateCam() {
+    camera.position.set(radius * Math.sin(phi) * Math.cos(theta),
+                        radius * Math.cos(phi),
+                        radius * Math.sin(phi) * Math.sin(theta));
+    camera.lookAt(-0.5, 0.4, 0);
+  }
+  updateCam();
+
+  // ---------- Tooltip + resaltado al pasar el cursor ----------
+  var raycaster = new THREE.Raycaster();
+  var mouseNDC = new THREE.Vector2();
+  var tooltip = document.createElement('div');
+  tooltip.style.cssText = 'position:absolute;pointer-events:none;background:#1e293b;color:#f8fafc;' +
+    'border:1px solid #334155;padding:6px 10px;border-radius:6px;font-size:0.75rem;' +
+    'font-family:Segoe UI,Arial,sans-serif;display:none;z-index:10;white-space:nowrap;';
+  cont.appendChild(tooltip);
+
+  function hover(e) {
+    var r = renderer.domElement.getBoundingClientRect();
+    mouseNDC.x =  ((e.clientX - r.left) / r.width)  * 2 - 1;
+    mouseNDC.y = -((e.clientY - r.top)  / r.height) * 2 + 1;
+    raycaster.setFromCamera(mouseNDC, camera);
+    var hits = raycaster.intersectObjects(barras);
+    barras.forEach(function (b) { b.material.emissive.setHex(0x000000); });
+    if (hits.length) {
+      hits[0].object.material.emissive.setHex(0x2c3e50);
+      tooltip.textContent = hits[0].object.userData.texto;
+      tooltip.style.display = 'block';
+      tooltip.style.left = (e.clientX - r.left + 14) + 'px';
+      tooltip.style.top  = (e.clientY - r.top  - 10) + 'px';
+      renderer.domElement.style.cursor = 'pointer';
+    } else {
+      tooltip.style.display = 'none';
+      renderer.domElement.style.cursor = 'grab';
+    }
+  }
+
+  // ---------- Arrastrar para rotar ----------
+  var arrastrando = false, ultX = 0, ultY = 0, inactivo = 99;
+  var dom = renderer.domElement;
+  dom.addEventListener('pointerdown', function (e) {
+    arrastrando = true; ultX = e.clientX; ultY = e.clientY;
+    cont.style.cursor = 'grabbing';
+    tooltip.style.display = 'none';
+    if (dom.setPointerCapture) dom.setPointerCapture(e.pointerId);
+  });
+  window.addEventListener('pointermove', function (e) {
+    if (!arrastrando) { hover(e); return; }
+    theta -= (e.clientX - ultX) * 0.006;
+    phi = Math.max(0.3, Math.min(1.45, phi - (e.clientY - ultY) * 0.005));
+    ultX = e.clientX; ultY = e.clientY; inactivo = 0;
+  });
+  window.addEventListener('pointerup', function () {
+    arrastrando = false; cont.style.cursor = 'grab';
+  });
+
+  // ---------- Bucle de animación (auto-rotación tras 3 s) ----------
+  var reloj = new THREE.Clock();
+  (function animar() {
+    requestAnimationFrame(animar);
+    var dt = Math.min(reloj.getDelta(), 0.05);
+    inactivo += dt;
+    if (!arrastrando && inactivo > 3) theta += 0.12 * dt;
+    updateCam();
+    renderer.render(scene, camera);
+  })();
+
+  // ---------- Responsive ----------
+  window.addEventListener('resize', function () {
+    var w = cont.clientWidth, h = cont.clientHeight;
+    if (!w || !h) return;
+    W = w; H = h;
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+    renderer.setSize(w, h);
+    ajustarRadio();
+  });
+})();
+</script>    
+
+<!-- ============ SELECTOR DE AUDIENCIA ============ -->
+<section id="audiencia">
+  <div class="container">
+    <div class="section-head">
+      <p class="eyebrow">Elige tu perfil</p>
+      <h2>MIRPE y SIGPE se adaptan a cómo operas</h2>
+    </div>
+
+    <div class="audience-tabs" role="tablist" aria-label="Seleccionar audiencia">
+      <button class="audience-tab" role="tab" aria-selected="true" data-target="panel-empresa">Empresa de seguridad</button>
+      <button class="audience-tab" role="tab" aria-selected="false" data-target="panel-gobierno">Gobierno / fuerzas de orden</button>
+      <button class="audience-tab" role="tab" aria-selected="false" data-target="panel-independiente">Escolta independiente</button>
+    </div>
+
+    <div class="audience-panel active" id="panel-empresa">
+      <h3>Escala tu operación sin perder el control de cada misión.</h3>
+      <p>Coordina múltiples VIP y múltiples agentes desde un solo sistema. Trazabilidad completa entre turnos, reportes profesionales que puedes entregar directamente a tus propios clientes, y una metodología — MIRPE — que estandariza a todo tu equipo, no solo al agente más experimentado.</p>
+      <a href="#contacto" class="btn btn-primary" data-segment="empresa">Solicita una demo</a>
+    </div>
+
+    <div class="audience-panel" id="panel-gobierno">
+      <h3>Protocolos estandarizados y auditables para toda tu institución.</h3>
+      <p>MIRPE certifica a tus agentes y directores en una metodología única de evaluación de riesgo, mientras SIGPE deja cada misión documentada y trazable para efectos de control interno y rendición de cuentas. Compatible con procesos de cotización y licitación formal.</p>
+      <a href="#contacto" class="btn btn-primary" data-segment="gobierno">Solicita una reunión institucional</a>
+    </div>
+
+    <div class="audience-panel" id="panel-independiente">
+      <h3>Certifícate en la metodología que usan las agencias más serias — y trabaja como ellas.</h3>
+      <p>No necesitas un equipo grande para operar con estándar profesional. El curso MIRPE te certifica en la misma metodología que aplican agencias completas, y SIGPE te da las herramientas para coordinar tu trabajo y generar informes como un profesional independiente de alto nivel.</p>
+      <a href="#cursos" class="btn btn-primary" data-segment="independiente">Empieza el curso MIRPE</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SOBRE MIRPE ============ -->
+<section id="metodologia">
+  <div class="container">
+    <div class="section-head">
+      <p class="eyebrow">La metodología</p>
+      <h2>MIRPE: la metodología que convierte la Protección Ejecutiva en una disciplina, no en una improvisación.</h2>
+    </div>
+
+    <div class="mirpe-body">
+      <div class="lead">
+        <p>MIRPE <strong>(Metodología de Inteligencia del Riesgo para la Protección Ejecutiva)</strong> es un método integral para analizar, anticipar y gestionar el riesgo alrededor de una persona protegida — desde su perfil y entorno familiar hasta su exposición pública y su capacidad de respuesta ante una amenaza real.</p>
+        <p>No es un software. Es una forma de pensar y de operar que se enseña a agentes y directores hasta que se vuelve parte de su criterio profesional. Un equipo que domina MIRPE evalúa el riesgo de la misma forma sin importar quién esté de turno ese día — con o sin un sistema digital de por medio.</p>
+        <p>SIGPE nace después, como la herramienta que hace más rápida y ordenada la aplicación de MIRPE en el día a día. Pero el activo real es el método: quien lo domina, opera al nivel de las agencias más serias del rubro, tenga o no el software.</p>
+        <div class="authority-note">
+
+        <img src="convoy02.png" alt="Equipo MIRPE en operación" class="photo-slot">   
+              
+        </div>
+      </div>
+
+      <ul class="area-list">
+        <li>Perfil y evaluación del protegido</li>
+        <li>Salud y bienestar</li>
+        <li>Entorno familiar</li>
+        <li>Amenaza y exposición pública</li>
+        <li>Riesgo familiar</li>
+        <li>Defensa y capacidad de respuesta</li>
+        <li>Servicio de protección avanzada</li>
+        <li>Comando y coordinación táctica</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ QUIÉNES SOMOS ============ -->
+<section id="quienes-somos">
+  <div class="container">
+    <div class="section-head">
+      <p class="eyebrow">Quiénes somos</p>
+      <h3>El equipo detrás de MIRPE</h3>
+    </div>
+
+    <div class="quienes-body">
+      <!-- Sube aquí una foto del equipo, de terreno o del fundador -->
+      <img src="agente.png" alt="Equipo MIRPE en operación" class="quienes-photo">
+      <div class="lead">
+        <p><strong><h3>De la experiencia operativa a la ciencia de la protección</h3></strong></p>
+        <p>MIRPE nace en el terreno, no en el escritorio. Tras años de operaciones reales, identificamos un problema crítico en el rubro: la evaluación de riesgos dependía casi exclusivamente de la intuición del jefe de seguridad de turno. Esa subjetividad generaba decisiones inconsistentes, dificultaba las auditorías y hacía imposible comparar operaciones en el tiempo. <strong>MIRPE surge para eliminar esa "caja negra" </strong>y transformar la experiencia empírica en un sistema objetivo, trazable y auditable.</p>
+        <h3>Liderazgo con rigor científico</h3>
+        <p>La metodología es liderada por Felipe A. Palavecino H., profesional que <strong>fusiona la experiencia operativa en protección ejecutiva y gestión de crisis con un profundo rigor académico</strong>. Su visión fue integrar disciplinas que tradicionalmente operaban aisladas —medicina, inteligencia, logística, ciberseguridad y gestión del riesgo— en un solo modelo cuantificable. Bajo su dirección, MIRPE evolucionó desde procedimientos empíricos hacia un Marco Científico y Matemático robusto, alineado con estándares internacionales como ISO 31000 y ASIS International.</p>
+        <h3>Compromiso con la excelencia</h3>
+        <p>El equipo detrás de MIRPE comparte una convicción: la protección de una persona no puede basarse en la subjetividad. Por eso, no solo hemos construido una herramienta de evaluación, sino un Modelo de Madurez Organizacional que permite a gobiernos y empresas diagnosticar su nivel actual y trazar una hoja de ruta hacia la excelencia. Nuestra misión es clara: <strong>profesionalizar la protección ejecutiva global</strong>, entregando un sistema auditable, escalable y confiable para proteger lo más valioso: la vida y la continuidad de las personas..</p>
+      </div>
+    </div>
+
+    <!-- grafico 3D Ataques a Autoridades en Latinoamérica -->
+    <div style="background-color: #0b0f19; padding: 15px; border-radius: 12px; border: 1px solid #1e293b; margin: 20px 0 40px; width: 100%; box-sizing: border-box;">
+      <h3 style="color: #f8fafc; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 1.1rem; margin-top: 0; margin-bottom: 5px; text-align: center;">Evolución de Ataques a Autoridades en Latinoamérica</h3>
+      <p style="color: #94a3b8; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 0.8rem; margin-top: 0; margin-bottom: 15px; text-align: center;">Visualización tridimensional interactiva</p>
+
+      <!-- Contenedor 100% fluido -->
+      <div id="chart-container" style="width: 100%; height: 400px; background: #0b0f19;"></div>
+    </div>
+    <!-- termino grafico-->
+
+
+    <div class="team-grid">
+      <div class="team-member">
+        <img src="foto aca" alt="Equipo MIRPE en operación" class="quienes-photo">
+        <h4>Felipe A. Palavecino Huenchulao</h4>
+        <p>Fundador y Desarrollador de la Metodología MIRPE</p>
+      </div>
+      <div class="team-member">
+        <div class="photo-slot">Foto de un miembro del equipo</div>
+        <h4>[Nombre]</h4>
+        <p>[Cargo / rol]</p>
+      </div>
+      <div class="team-member">
+        <div class="photo-slot">Foto de un miembro del equipo</div>
+        <h4>[Nombre]</h4>
+        <p>[Cargo / rol]</p>
+      </div>
+    </div>
+  </div>
+</section>
+<section id="sigpe">
+  <div class="container">
+    <div class="section-head">
+      <p class="eyebrow">El software de apoyo</p>
+      <h2>SIGPE: la metodología MIRPE, ejecutada en tiempo real.</h2>
+      <p>Cada dato que cargas — el perfil del protegido, su entorno, el nivel de amenaza — alimenta un panel de control que te muestra el riesgo real de la misión, no una estimación a ojo ni un criterio distinto según quién esté de turno.</p>
+             
+    </div>
+
+    <div class="modules-list">
+  <div class="module-text">
+    <strong>M1 · Perfil del Protegido</strong>
+    <span>Toda la información crítica del VIP en un solo clic. Nunca más busques en carpetas, PDFs o planillas dispersas cuando cada segundo cuenta.</span>
+  </div>
+  <div class="module-text">
+    <strong>M2 · Historial Médico</strong>
+    <span>Antecedentes de salud, alergias y medicación crítica disponibles al instante. En una emergencia real, la diferencia entre reaccionar bien o mal está en tener el dato a mano.</span>
+  </div>
+  <div class="module-text">
+    <strong>M3 · Entorno Familiar</strong>
+    <span>El riesgo no siempre viene por el VIP. Mapea su círculo cercano y anticipa los puntos ciegos que la mayoría de los equipos descubre demasiado tarde.</span>
+  </div>
+  <div class="module-text">
+    <strong>M4 · Protocolos de Defensa</strong>
+    <span>Respuesta clara y ensayada ante cada escenario. Deja de improvisar bajo presión: tu equipo sabe exactamente qué hacer, cuándo y cómo.</span>
+  </div>
+  <div class="module-text">
+    <strong>M5 · Amenaza y Exposición</strong>
+    <span>Mide el nivel real de exposición pública del protegido y ajusta la protección en consecuencia. Ni un escolta de más, ni uno de menos.</span>
+  </div>
+  <div class="module-text">
+    <strong>M6 · Riesgo Familiar</strong>
+    <span>La familia del VIP también es objetivo. Extiende el análisis más allá de la persona y cierra la brecha que muchos adversarios explotan primero.</span>
+  </div>
+  <div class="module-text">
+    <strong>M7 · Servicio de Avanzada</strong>
+    <span>Reconocimiento previo, coordinado y documentado. El protegido llega a un lugar ya evaluado, nunca a ciegas.</span>
+  </div>
+  <div class="module-text">
+    <strong>M8 · Comando Táctico Diario</strong>
+    <span>El módulo operativo del día a día se reinicia cada jornada. Cada misión empieza limpia, sin arrastrar el ruido de la anterior. Cero contaminación operativa.</span>
+  </div>
+  <div class="module-text">
+    <strong>M9 · Panel de Control Integral</strong>
+    <span>Todo el riesgo de la operación en un solo dashboard, con semáforos que te dicen dónde mirar primero. Decisiones en segundos, no en reuniones de horas.</span>
+  </div>
+</div>
+
+    <!-- Sube aquí 3 fotos reales de SIGPE en uso (con datos ficticios) o de tu equipo en terreno -->
+    <div class="photo-grid">
+      <div class="photo-slot">Foto 1<br>Reemplaza este bloque por una imagen (ej. pantalla de SIGPE con datos ficticios)</div>
+      <div class="photo-slot">Foto 2<br>Reemplaza este bloque por una imagen</div>
+      <div class="photo-slot">Foto 3<br>Reemplaza este bloque por una imagen</div>
+    </div>
+
+    <div class="demo-block">
+      <div class="demo-step">
+        <p class="step-label">Paso 1</p>
+        <!-- Reemplaza este div por un iframe de YouTube cuando tengas el video grabado (con datos ficticios), ej:
+             <iframe class="video-frame" src="https://www.youtube.com/embed/TU-ID-DE-VIDEO" title="Demo SIGPE" allowfullscreen></iframe> -->
+        <div class="video-frame">Video embebido: recorrido completo de SIGPE (pendiente de grabar con datos ficticios)</div>
+        <h4>Mira SIGPE en acción</h4>
+        <p>Un recorrido completo del sistema, de la carga de una misión al informe final.</p>
+      </div>
+      <div class="demo-step">
+        <p class="step-label">Paso 2</p>
+        <h4>Agenda una demo en vivo</h4>
+        <p>¿Necesitas resolver algo puntual de tu operación? Conversa directamente con el equipo.</p>
+        <!-- Pega aquí tu link de Calendly, Cal.com o similar -->
+        <a href="PEGA-AQUI-TU-LINK-DE-AGENDA" class="btn btn-secondary">Agendar demo</a>
+      </div>
+      <div class="demo-step">
+        <p class="step-label">Paso 3</p>
+        <h4>Prueba un ambiente sandbox</h4>
+        <p>Solicita acceso a un entorno de prueba con datos ficticios para explorarlo tú mismo.</p>
+        <a href="#contacto" class="btn btn-secondary">Solicitar acceso</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CURSOS ============ -->
+<section id="cursos">
+  <div class="container">
+    <div class="section-head">
+      <p class="eyebrow">Formación</p>
+      <h2>Fórmate en MIRPE: conviértete tú mismo en el método.</h2>
+      <p>Un sistema puede fallar, perderse o quedar desactualizado. Un agente que domina MIRPE no. Este curso forma a agentes y directores directamente en la metodología — no en el uso de una herramienta — para que evalúen el riesgo con el mismo criterio que las agencias de protección ejecutiva más serias del rubro, con o sin software de por medio.</p>
+    </div>
+
+    <ul class="course-includes">
+      <li>Evaluación integral del protegido: perfil, salud, entorno familiar y exposición pública</li>
+      <li>Análisis de amenaza y capacidad de respuesta ante un incidente real</li>
+      <li>Protocolos de defensa y coordinación de avanzada</li>
+      <li>Comando y coordinación táctica en terreno, día a día</li>
+      <li>Estructuración de reportes al nivel que exige un cliente institucional</li>
+      <li>Clases asincrónicas, para que aprendas a tu propio ritmo, material de apoyo en PDF</li>
+    </ul>
+
+    <div class="pricing-track">
+      <div class="price-card">
+        <p class="stage">Nivel 1</p>
+        <p class="amount">$0</p>
+        <p class="req">Fundamentos en la Evaluación del Riesgo para la Proteccion Ejecutiva</p>
+      </div>
+      <div class="price-card">
+        <p class="stage">Nivel 2</p>
+        <p class="amount">USD 175</p>
+        <p class="req">Evaluador del Riesgo para la Proteccion Ejecutiva</p>
+      </div>
+      <div class="price-card">
+        <p class="stage">Nivel 3</p>
+        <p class="amount">USD 350</p>
+        <p class="req">Analista Tecnico en Proteccion Ejecutiva</p>
+      </div>
+      <div class="price-card">
+        <p class="stage">Nivel 4 — Experto</p>
+        <p class="amount">USD 350</p>
+        <p class="req">Inteligencia de Riesgo para la Proteccion Ejecutiva</p>
+      </div>
+      <div class="price-card is-future">
+        <p class="stage">Diplomado — Analista</p>
+        <p class="amount">USD 1.500</p>
+        <p class="req">Diplomado en Prevencion de Riesgo e Inteligencia para la Proteccion Ejecutiva</p>
+      </div>
+    </div>
+
+    <div class="modalities">
+      <div class="modality-card">
+        <h4>Individual</h4>
+        <p>Para el escolta o agente que quiere certificarse por su cuenta y elevar su nivel profesional.</p>
+      </div>
+      <div class="modality-card is-team">
+        <h4>Equipo completo</h4>
+        <p>Para empresas de seguridad y agencias de gobierno que quieren estandarizar a todo su personal bajo un mismo criterio de evaluación de riesgo. Cotización por volumen.</p>
+      </div>
+    </div>
+
+    <!-- Sube aquí 3 fotos de alumnos, clases o certificaciones entregadas -->
+    <div class="photo-grid">
+      <div class="photo-slot"><br><img src="convoy02.png" alt="">Reemplaza por texto</div>
+      <div class="photo-slot">Foto 2<br><img src="pega foto aca" alt="Foto 2"></div>
+      <div class="photo-slot">Foto 3<br><img src="pega foto aca" alt="Foto 3"></div>
+    </div>
+
+    <!-- Pega aquí el link a tu contenido gratuito de introducción (YouTube, Google Drive, etc.) -->
+    <a href="PEGA-AQUI-TU-LINK-DEL-CURSO-GRATIS" class="btn btn-secondary">Empieza a costo $0</a>
+
+    <!--
+      Pagos de los niveles pagados: PayPal (botón embebido) + Mercado Pago (link de pago).
+      Instrucciones completas para configurar ambos en README.md, sección "Pagos".
+    -->
+    <div class="payment-options">
+      <div class="payment-row">
+        <div class="payment-info"><h4>Nivel 2</h4><p>USD 175· requiere haber aprobado el Nivel 1</p></div>
+        <div class="payment-buttons">
+          <div id="paypal-nivel2" class="paypal-slot"></div>
+          <!-- Pega aquí tu link de pago de Mercado Pago para el Nivel 2 -->
+          <a href="https://mpago.la/1GNNnnz" class="btn btn-secondary" target="_blank" rel="noopener">Pagar con Mercado Pago</a>
+        </div>
+      </div>
+      <div class="payment-row">
+        <div class="payment-info"><h4>Nivel 3</h4><p>USD 350 · requiere haber aprobado el Nivel 2</p></div>
+        <div class="payment-buttons">
+          <div id="paypal-nivel3" class="paypal-slot"></div>
+          <!-- Pega aquí tu link de pago de Mercado Pago para el Nivel 3 -->
+          <a href="https://mpago.la/2pE7XcH" class="btn btn-secondary" target="_blank" rel="noopener">Pagar con Mercado Pago</a>
+        </div>
+      </div>
+      <div class="payment-row">
+        <div class="payment-info"><h4>Nivel 4</h4><p>USD 350 · requiere haber aprobado el Nivel 3</p></div>
+        <div class="payment-buttons">
+          <div id="paypal-nivel4" class="paypal-slot"></div>
+          <!-- Pega aquí tu link de pago de Mercado Pago para el Nivel 4 -->
+          <a href="https://mpago.la/24QhbSY" class="btn btn-secondary" target="_blank" rel="noopener">Pagar con Mercado Pago</a>
+        </div>
+      </div>
+      <div class="payment-row">
+        <div class="payment-info"><h4>Nivel — Diplomado Experto</h4><p>USD 225 · requiere haber aprobado el Nivel 4</p></div>
+        <div class="payment-buttons">
+          <div id="paypal-nivel4" class="paypal-slot"></div>
+          <!-- Pega aquí tu link de pago de Mercado Pago para el Nivel diplomado -->
+          <a href="PEGA-AQUI-LINK-MERCADOPAGO-NIVEL3" class="btn btn-secondary" target="_blank" rel="noopener">Pagar con Mercado Pago</a>
+        </div>
+      </div>
+      <p class="payment-note">Al aprobar el examen de cada nivel, te contactaremos para habilitar el pago del siguiente.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ BLOG ============ -->
+<section id="blog">
+  <div class="container">
+    <div class="section-head">
+      <p class="eyebrow">Blog</p>
+      <h2>Análisis y terreno, desde MIRPE y desde tu comunidad</h2>
+      <p>Artículos sobre metodología, protección ejecutiva y análisis de riesgo — escritos por nosotros y también por profesionales del rubro que quieran compartir su experiencia.</p>
+    </div>
+
+    <div class="blog-grid">
+      <div class="blog-card">
+        <div class="photo-slot">Espacio para la imagen del artículo</div>
+        <h4>Próximamente</h4>
+        <p>Aquí aparecerá tu primer artículo publicado.</p>
+      </div>
+      <div class="blog-card">
+        <div class="photo-slot">Espacio para la imagen del artículo</div>
+        <h4>Próximamente</h4>
+        <p>Espacio reservado para un artículo de la comunidad.</p>
+      </div>
+      <div class="blog-card">
+        <div class="photo-slot">Espacio para la imagen del artículo</div>
+        <h4>Próximamente</h4>
+        <p>Espacio reservado para un artículo de la comunidad.</p>
+      </div>
+    </div>
+
+    <div class="blog-submit">
+      <h3>¿Quieres publicar en el blog de MIRPE?</h3>
+      <p>Cuéntanos tu idea o pega el contenido de tu artículo. Cada propuesta se revisa antes de publicarse — así mantenemos el nivel del contenido asociado a la metodología.</p>
+
+      <form class="contact-form" id="blogForm">
+        <input type="hidden" name="formType" value="articulo">
+        <div class="field">
+          <label for="blog-name">Nombre</label>
+          <input type="text" id="blog-name" name="name" required>
+        </div>
+        <div class="field">
+          <label for="blog-email">Correo</label>
+          <input type="email" id="blog-email" name="email" required>
+        </div>
+        <div class="field">
+          <label for="blog-title">Título del artículo</label>
+          <input type="text" id="blog-title" name="title" required>
+        </div>
+        <div class="field">
+          <label for="blog-content">Contenido, resumen o link a tu artículo (Google Doc, PDF, etc.)</label>
+          <textarea id="blog-content" name="content" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Enviar propuesta</button>
+        <p class="form-status" id="blogFormStatus" role="status"></p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section id="faq">
+  <div class="container">
+    <div class="section-head">
+      <p class="eyebrow">Preguntas frecuentes</p>
+      <h2>Resuelto por perfil</h2>
+    </div>
+
+    <div class="faq-groups" role="tablist" aria-label="Filtrar preguntas frecuentes">
+      <button class="faq-group-tab" aria-selected="true" data-faq="faq-Aclara tus dudas">Aclara tus dudas</button>
+      
+    </div>
+
+    <div class="faq-list active" id="faq-Aclara tus dudas">
+
+  <div class="faq-item">
+    <button class="faq-question"><span>¿SIGPE reemplaza a mi personal o solo apoya su trabajo?</span><span class="icon">+</span></button>
+    <div class="faq-answer"><p>Solo lo potencia. MIRPE es la metodología que estandariza el criterio de tu equipo; SIGPE la ejecuta más rápido, sin errores por cansancio, cambio de turno o pérdida de memoria operativa. Tu gente sigue decidiendo — pero decide con datos, no con intuición.</p></div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-question"><span>¿Puedo migrar la información que ya tengo en Excel o WhatsApp?</span><span class="icon">+</span></button>
+    <div class="faq-answer"><p>Sí, y no pierdes nada. Coordinamos un traspaso guiado de fichas de VIP, historial de misiones y registros activos. Pasas de planillas dispersas a un sistema unificado sin perder un solo dato.</p></div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-question"><span>¿Cuántos agentes o VIP puede manejar el sistema?</span><span class="icon">+</span></button>
+    <div class="faq-answer"><p>Escala contigo. Desde un equipo pequeño hasta operaciones con cientos de usuarios simultáneos, sin degradar el rendimiento ni la trazabilidad de cada evaluación.</p></div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-question"><span>¿Puedo certificar a todo mi equipo en la metodología MIRPE?</span><span class="icon">+</span></button>
+    <div class="faq-answer"><p>Sí. Todo tu equipo puede recorrer la misma <strong>ruta de profesionalización</strong>, nivel por nivel, hasta convertirse en Analista de Inteligencia en Protección Ejecutiva. La ruta es:</p><ul><li>
+      <strong>Nivel 1: - Fundamentos en la Evaluación del Riesgo para la Protección Ejecutiva</strong> (Gratis)</li><li>
+        <strong>Nivel 2: - Evaluador del Riesgo para la Protección Ejecutiva</strong> (de cobro)</li><li>
+          <strong>Nivel 3: - Analista Técnico en Protección Ejecutiva</strong> (de cobro)</li><li>
+           <strong>Nivel 4: - Inteligencia de Riesgo para la Protección Ejecutiva</strong> (de cobro)</li><li>
+            <strong>Nivel 5: - Diplomado en Analista de Inteligencia en Protección Ejecutiva</strong> (de cobro)</li></ul><p>Cotizamos por volumen, niveles, necesidad, según cuántos agentes certifiques, forma a todo tu equipo y nivelate con estandares internacionales.</p></div>
+  </div>
+
+ <div class="faq-item">
+  <button class="faq-question"><span>¿El precio de SIGPE es por agente, por VIP o por empresa?</span><span class="icon">+</span></button>
+  <div class="faq-answer">
+    <p>Es <strong>por dispositivo conectado</strong> — así pagas exactamente por lo que usas, sin importar cuántos agentes rotan o cuántos VIPs gestionas. El modelo se adapta a tu realidad operativa:</p>
+    <p>
+      <strong>🔹 Agentes Independientes (trabajos de 1 a 30 días)</strong><br>
+      <strong>USD $6 por dispositivo/día.</strong> Sin contrato mensual, sin ataduras. Pagas solo los días que trabajas. Ideal para servicios esporádicos, eventos puntuales o misiones de corta duración.
+        </p>
+        <p>
+      <strong>🔹 Empresas de Seguridad Privada (operación continua, servicios mensuales)</strong><br>
+      <strong>Suscripción mensual o anual con descuento por volumen:</strong><br>
+      • De <strong>1 a 5 dispositivos:</strong> USD $120 por dispositivo/mes<br>
+      • De <strong>6 a 10 dispositivos:</strong> USD $100 por dispositivo/mes <em>(ahorro del 16%)</em><br>
+      • <strong>Más de 10 dispositivos:</strong> USD $90 por dispositivo/mes <em>(ahorro del 25%)</em><br>
+      Contratos mensuales o anuales, con facturación predecible para tu presupuesto.
+    </p>
+    <p>
+      <strong>🔹 Instituciones Gubernamentales (Servicios de Escolta)</strong><br>
+      <strong>Paquete institucional para 50 dispositivos</strong> — cotización a medida según los requerimientos del organismo, con contrato marco anual y documentación formal para procesos de licitación pública.
+    </p>
+    <p>En los tres casos, el precio es el mismo servicio: la metodología MIRPE ejecutada con trazabilidad total, sin errores por cansancio y con respaldo digital de cada decisión.</p>
+  
+   <p>El servicio: la metodología MIRPE ejecutada con trazabilidad total, sin errores por cansancio y con respaldo digital de cada decisión.</p>
+     </div>
+  
+  <div class="faq-item">
+    <button class="faq-question"><span>¿Cumplen con la normativa de protección de datos personales?</span><span class="icon">+</span></button>
+    <div class="faq-answer"><p>Sí. Operamos conforme a la <strong>Ley 19.628</strong> y ya estamos preparados para la <strong>Ley 21.719</strong>, vigente desde el 1 de diciembre de 2026. La información sensible de tus protegidos queda resguardada bajo estándares legales vigentes y futuros.</p></div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-question"><span>¿Pueden participar en procesos de licitación pública?</span><span class="icon">+</span></button>
+    <div class="faq-answer"><p>Sí. Emitimos toda la documentación formal exigida — cotización, boleta o factura — y acompañamos el proceso de compra pública para que la adjudicación sea expedita.</p></div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-question"><span>¿Ofrecen una demo institucional antes de comprometerse?</span><span class="icon">+</span></button>
+    <div class="faq-answer"><p>Sí. Coordinamos una demo en vivo con tu equipo y, según el caso, evaluamos un <strong>piloto acotado</strong> para que compruebes resultados antes de cualquier compromiso mayor.</p></div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-question"><span>¿Certifican a personal institucional en la metodología MIRPE?</span><span class="icon">+</span></button>
+    <div class="faq-answer"><p>Sí. Mismo track de tres niveles (USD 175 / 350 / 350/ 220), más el <strong>Diplomado en Analista de Inteligencia en Protección Ejecutiva</strong> USD 220(en total por todo USD 1.095) para instituciones que quieren formar analistas propios. Cotización por volumen según dotación.</p></div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-question"><span>¿El sistema funciona sin conexión a internet en terreno?</span><span class="icon">+</span></button>
+    <div class="faq-answer"><p>Sí. SIGPE está diseñado para operar en condiciones reales de terreno, incluyendo zonas sin cobertura, esto es porque la app guarda la información. Consulta con nuestro equipo los detalles de persistencia off-line según tu caso de uso.</p></div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-question"><span>¿Puedo tomar el curso sin comprar el software?</span><span class="icon">+</span></button>
+    <div class="faq-answer"><p>Sí. El curso MIRPE se vende de forma independiente. SIGPE es una herramienta opcional para quien quiera aplicar lo aprendido con mayor velocidad y respaldo digital.</p></div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-question"><span>¿Cuánto cuesta el curso MIRPE?</span><span class="icon">+</span></button>
+    <div class="faq-answer"><p>Empieza gratis con la introducción general al método. Luego:
+      <br>• <strong>Nivel 1: - Fundamentos en la Evaluación del Riesgo para la Proteccion Ejecutiva</strong> Gratis
+      <br>• <strong>Nivel 2: - Evaluador del Riesgo para la Proteccion Ejecutiva</strong> USD 175 (requiere aprobar el examen del Nivel 1)
+      <br>• <strong>Nivel 3: - Analista Tecnico en Proteccion Ejecutiva</strong> USD 350 (requiere aprobar el examen del Nivel 2)
+      <br>• <strong>Nivel 4: — Inteligencia de Riesgo para la Proteccion Ejecutiva</strong> USD 350 (requiere aprobar el examen del Nivel 3)
+      <br>• <strong>Diplomado en Analista de Inteligencia en Protección Ejecutiva</strong> USD 220 (requiere aprobar el examen del Nivel 4)</p></div>
+     </div>
+   </div>
+  <div class="faq-item">
+    <button class="faq-question"><span>¿Necesito experiencia previa en protección ejecutiva?</span><span class="icon">+</span></button>
+    <div class="faq-answer"><p>El Nivel 1 está diseñado para incorporarte al método desde cero. Si ya vienes del rubro, avanzarás más rápido — pero no es un requisito para empezar.</p></div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-question"><span>¿El diploma tiene reconocimiento oficial?</span><span class="icon">+</span></button>
+    <div class="faq-answer"><p>Es una certificación propia de MIRPE que valida tu dominio del método ante agencias y clientes. No es un título estatal, pero sí un respaldo técnico que habla de tu nivel de preparación.</p></div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-question"><span>¿Cuánto dura el curso y a qué ritmo se toma?</span><span class="icon">+</span></button>
+    <div class="faq-answer"><p>100% autodirigido, a tu propio ritmo. Clases asincronicas, material descargable y evaluaciones por nivel. Avanzas cuando puedes, sin fechas impuestas.</p></div>
+  </div>
+</div>
+  </div>
+</section>
+
+<!-- ============ CONTACTO ============ -->
+<section id="contacto">
+  <div class="container">
+    <div class="section-head">
+      <p class="eyebrow">Contacto</p>
+      <h2>Hablemos de tu operación</h2>
+    </div>
+
+    <div class="contact-grid">
+      <!--
+        Formulario conectado a Google Apps Script (envía a tu Gmail directo,
+        sin empresa intermediaria). Ver /apps-script/Code.gs para instalarlo.
+        El "action" de abajo es un respaldo por si alguien tiene JavaScript
+        desactivado; el envío normal lo maneja script.js.
+      -->
+      <form class="contact-form" id="contactForm">
+        <div class="field">
+          <label for="name">Nombre</label>
+          <input type="text" id="name" name="name" required>
+        </div>
+        <div class="field">
+          <label for="email">Correo</label>
+          <input type="email" id="email" name="email" required>
+        </div>
+        <div class="field">
+          <label for="segment">Perfil</label>
+          <select id="segment" name="segment">
+            <option value="empresa">Empresa de seguridad</option>
+            <option value="gobierno">Gobierno / fuerzas de orden</option>
+            <option value="independiente">Escolta independiente</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="message">Cuéntanos qué necesitas</label>
+          <textarea id="message" name="message" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Enviar</button>
+        <p class="form-status" id="formStatus" role="status"></p>
+      </form>
+
+      <div class="contact-channels">
+        <div class="channel-card">
+          <div>
+            <h4>WhatsApp</h4>
+            <p>Respuesta directa para dudas puntuales.</p>
+            <a href="https://wa.me/56900000000" target="_blank" rel="noopener">Escribir por WhatsApp →</a>
+          </div>
+        </div>
+        <div class="channel-card">
+          <div>
+            <h4>Correo</h4>
+            <p>Para cotizaciones formales o licitaciones.</p>
+            <a href="mailto:contacto@mirpe.cl">contacto@mirpe.cl</a>
+          </div>
+        </div>
+        <div class="channel-card">
+          <div>
+            <h4>Redes</h4>
+            <div class="social-links" style="margin-top:8px;">
+              <a href="#" aria-label="LinkedIn">in</a>
+              <a href="#" aria-label="Instagram">ig</a>
+              <a href="#" aria-label="X">x</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-top">
+      <a href="#" class="brand">
+        <img src="logo_pag.png" alt="MIRPE" class="brand-logo" onerror="this.style.display='none'">
+        MIRPE<span>.</span>
+      </a>
+      <div class="footer-links">
+        <a href="#quienes-somos">Quiénes somos</a>
+        <a href="#blog">Blog</a>
+        <a href="privacidad.html">Política de privacidad</a>
+        <a href="terminos.html">Términos de servicio</a>
+        <a href="#contacto">Contacto</a>
+      </div>
+    </div>
+    <p class="footer-legal">© <span id="year"></span> MIRPE. Todos los derechos reservados. SIGPE es el software de apoyo de la metodología MIRPE.</p>
+  </div>
+</footer>
+
+<a class="whatsapp-float" href="https://wa.me/56900000000" target="_blank" rel="noopener" aria-label="Escríbenos por WhatsApp">
+  <svg viewBox="0 0 32 32" fill="white"><path d="M16 3C9 3 3.3 8.6 3.3 15.5c0 2.6.8 5 2.1 7L3 29l6.7-2.3c1.9 1.1 4.1 1.7 6.3 1.7 7 0 12.7-5.6 12.7-12.5S23 3 16 3zm0 22.7c-2 0-3.9-.5-5.5-1.5l-.4-.2-4 1.3 1.3-3.9-.3-.4c-1.1-1.7-1.7-3.7-1.7-5.8 0-5.9 4.8-10.7 10.7-10.7S26.7 9.6 26.7 15.5 21.9 25.7 16 25.7zm5.8-8c-.3-.2-1.9-.9-2.1-1s-.5-.2-.7.2-.8 1-1 1.2-.4.2-.7.1c-.3-.2-1.4-.5-2.7-1.7-1-.9-1.7-2-1.9-2.3-.2-.3 0-.5.1-.7.1-.1.3-.4.5-.5.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5S12.9 10 12.7 9.5c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.2.2-1 1-1 2.4s1 2.8 1.1 3c.1.2 2 3 4.8 4.3.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.7-.7 1.9-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.6-.3z"/></svg>
+</a>
+
+<script src="script.js"></script>
+</body>
+</html>
