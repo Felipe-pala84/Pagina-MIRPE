@@ -1150,7 +1150,7 @@ img.photo-slot {
 .hero-media {
   display: grid;
   grid-template-columns: minmax(0, 300px) minmax(0, 1fr) 300px;
-  gap: 40px;
+  gap: 20px;
   align-items: start;
 }
 
