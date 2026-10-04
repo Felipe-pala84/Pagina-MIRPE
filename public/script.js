@@ -1,398 +1,1200 @@
-// ============================================================
-// MIERPE / SIGPE — interactividad del sitio
-// Sitio 100% estático: sin backend propio. El pago del curso y
-// la agenda de demo se resuelven con links externos (ver index.html,
-// buscar "PEGA-AQUI"). El formulario de contacto usa Formspree.
-// ============================================================
+/* ============================================================
+   MIRPE / SIGPE — Sistema de diseño
+   Fondo casi negro azulado, acento bronce, dualidad tipográfica:
+   serif institucional (MIRPE) + sans técnico (SIGPE).
+   ============================================================ */
 
-document.getElementById("year").textContent = new Date().getFullYear();
+:root {
+  --bg: #0A0D12;
+  --surface: #10151C;
+  --surface-2: #161C25;
+  --border: #232B36;
+  --border-soft: #1A2029;
+  --text: #E9E6DF;
+  --text-muted: #9BA3AF;
+  --text-dim: #6B7280;
+  --accent: #C79A56;
+  --accent-strong: #E0B36C;
+  --risk-low: #4CAF7D;
+  --risk-mid: #D9A441;
+  --risk-high: #C25450;
 
-/* ---------- Gauge del hero: animación única al cargar ---------- */
-window.addEventListener("load", () => {
-  const gauge = document.getElementById("heroGauge");
-  requestAnimationFrame(() => {
-    setTimeout(() => gauge.classList.add("animate"), 150);
-  });
-});
+  --serif: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+  --sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 
-/* ---------- Menú móvil ---------- */
-const navToggle = document.getElementById("navToggle");
-const mainNav = document.querySelector(".main-nav");
-navToggle.addEventListener("click", () => {
-  const isOpen = mainNav.style.display === "flex";
-  mainNav.style.display = isOpen ? "none" : "flex";
-  mainNav.style.flexDirection = "column";
-  mainNav.style.position = "absolute";
-  mainNav.style.top = "72px";
-  mainNav.style.left = "0";
-  mainNav.style.right = "0";
-  mainNav.style.background = "var(--bg)";
-  mainNav.style.padding = "16px 28px";
-  mainNav.style.borderBottom = "1px solid var(--border-soft)";
-  navToggle.setAttribute("aria-expanded", String(!isOpen));
-});
+  --container: 1320px;
+  --radius: 3px;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+img, svg { max-width: 100%; display: block; }
+
+a { color: inherit; }
+
+.container {
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 0 28px;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px; height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+/* ---------- Encabezado global ---------- */
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background: rgba(10, 13, 18, 0.92);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.site-header .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+}
+
+.brand {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand-logo {
+  height: 28px;
+  width: auto;
+  display: block;
+}
+
+.brand span {
+  color: var(--accent-strong);
+}
+
+.brand-sub {
+  display: block;
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-dim);
+  letter-spacing: 0.06em;
+  margin-top: 1px;
+}
+
+.main-nav {
+  display: flex;
+  gap: 28px;
+}
+
+.main-nav a {
+  font-size: 14px;
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.main-nav a:hover, .main-nav a:focus-visible {
+  color: var(--text);
+}
+
+.nav-toggle {
+  display: none;
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: var(--radius);
+  width: 40px; height: 40px;
+  cursor: pointer;
+}
+
+/* ---------- Botones ---------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 13px 24px;
+  border-radius: var(--radius);
+  font-family: var(--sans);
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: transform 0.12s ease, background 0.15s ease, border-color 0.15s ease;
+}
+
+.btn:active { transform: translateY(1px); }
+
+.btn-primary {
+  background: var(--accent-strong);
+  color: #14100A;
+}
+.btn-primary:hover { background: #ECC17E; }
+
+.btn-secondary {
+  background: transparent;
+  color: var(--text);
+  border-color: var(--border);
+}
+.btn-secondary:hover { border-color: var(--accent); color: var(--accent-strong); }
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-muted);
+  padding: 13px 4px;
+}
+.btn-ghost:hover { color: var(--text); }
+
+/* ---------- Hero ---------- */
+
+.hero {
+  padding: 36px 0 48px;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.hero .container {
+  display: block;
+}
+
+.eyebrow {
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--accent);
+  font-weight: 600;
+  margin: 0 0 18px;
+}
+
+.hero h1 {
+  font-family: var(--serif);
+  font-size: 40px;
+  line-height: 1.18;
+  font-weight: 600;
+  margin: 0 0 16px;
+}
+
+.hero-sub {
+  font-size: 17px;
+  color: var(--text-muted);
+  margin: 0 0 16px;
+}
+
+.hero-highlight {
+  border-left: 2px solid var(--accent);
+  padding-left: 16px;
+  margin: 0 0 24px;
+  font-size: 15px;
+  color: var(--text);
+}
+
+.hero-highlight strong { color: var(--accent-strong); }
+
+.hero-actions {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+/* Gauge visual */
+
+.hero-visual {
+  display: flex;
+  justify-content: center;
+}
+
+.gauge-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px;
+  width: 100%;
+  max-width: 340px;
+}
+
+.gauge-card-label {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin: 0 0 18px;
+}
+
+.gauge-ring {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gauge-ring svg { width: 100%; height: 100%; }
+
+.gauge-track {
+  fill: none;
+  stroke: var(--border);
+  stroke-width: 10;
+}
+
+.gauge-value {
+  fill: none;
+  stroke: var(--accent-strong);
+  stroke-width: 10;
+  stroke-linecap: round;
+  stroke-dasharray: 251;
+  stroke-dashoffset: 251;
+  transition: stroke-dashoffset 1.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.gauge-ring.animate .gauge-value {
+  stroke-dashoffset: 68;
+}
+
+.gauge-center {
+  position: absolute;
+  text-align: center;
+}
+
+.gauge-center .num {
+  font-family: var(--serif);
+  font-size: 34px;
+  font-weight: 600;
+  display: block;
+}
+
+.gauge-center .lbl {
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.gauge-legend {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 18px;
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.gauge-legend span::before {
+  content: '';
+  display: inline-block;
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  margin-right: 6px;
+}
+.gauge-legend .low::before { background: var(--risk-low); }
+.gauge-legend .mid::before { background: var(--risk-mid); }
+.gauge-legend .high::before { background: var(--risk-high); }
+
+/* ---------- Secciones generales ---------- */
+
+section {
+  padding: 88px 0;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.section-head {
+  max-width: 62ch;
+  margin: 0 0 48px;
+}
+
+.section-head .eyebrow { margin-bottom: 14px; }
+
+section:not(#audiencia) .section-head { max-width: none; }
+
+.section-head h2 {
+  font-family: var(--serif);
+  font-size: 32px;
+  font-weight: 600;
+  margin: 0 0 16px;
+  line-height: 1.25;
+}
+
+.section-head p {
+  color: var(--text-muted);
+  font-size: 16px;
+  margin: 0;
+}
 
 /* ---------- Selector de audiencia ---------- */
-const audienceTabs = document.querySelectorAll(".audience-tab");
-audienceTabs.forEach((tab) => {
-  tab.addEventListener("click", () => {
-    audienceTabs.forEach((t) => t.setAttribute("aria-selected", "false"));
-    document.querySelectorAll(".audience-panel").forEach((p) => p.classList.remove("active"));
 
-    tab.setAttribute("aria-selected", "true");
-    document.getElementById(tab.dataset.target).classList.add("active");
-  });
-});
-
-/* ---------- FAQ: filtro por grupo ---------- */
-const faqTabs = document.querySelectorAll(".faq-group-tab");
-faqTabs.forEach((tab) => {
-  tab.addEventListener("click", () => {
-    faqTabs.forEach((t) => t.setAttribute("aria-selected", "false"));
-    document.querySelectorAll(".faq-list").forEach((l) => l.classList.remove("active"));
-
-    tab.setAttribute("aria-selected", "true");
-    document.getElementById(tab.dataset.faq).classList.add("active");
-  });
-});
-
-/* ---------- FAQ: acordeón ---------- */
-document.querySelectorAll(".faq-item").forEach((item) => {
-  const question = item.querySelector(".faq-question");
-  const answer = item.querySelector(".faq-answer");
-
-  question.addEventListener("click", () => {
-    const isOpen = item.dataset.open === "true";
-
-    // cierra los demás items del mismo grupo
-    item.closest(".faq-list").querySelectorAll(".faq-item").forEach((other) => {
-      other.dataset.open = "false";
-      other.querySelector(".faq-answer").style.maxHeight = null;
-    });
-
-    if (!isOpen) {
-      item.dataset.open = "true";
-      answer.style.maxHeight = answer.scrollHeight + "px";
-    }
-  });
-});
-
-/* ---------- Envío de formularios → Google Apps Script ----------
-   Pega aquí la URL que te entrega Apps Script al implementar
-   (ver /apps-script/Code.gs), termina en /exec */
-const APPS_SCRIPT_URL = "PEGA-AQUI-TU-URL-DE-APPS-SCRIPT";
-
-function wireForm(formId, statusId) {
-  const form = document.getElementById(formId);
-  const status = document.getElementById(statusId);
-  if (!form) return;
-
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    status.textContent = "Enviando…";
-    status.className = "form-status";
-
-    const formData = new FormData(form);
-
-    try {
-      // mode: "no-cors" es necesario porque Apps Script no agrega headers
-      // CORS a su respuesta. No podemos leer si Google respondió "success"
-      // o "error", pero la petición sí llega y el script sí se ejecuta y
-      // envía el correo. Si algo no llega, revisa el registro de
-      // ejecuciones en script.google.com (ícono de reloj, a la izquierda).
-      await fetch(APPS_SCRIPT_URL, {
-        method: "POST",
-        mode: "no-cors",
-        body: formData,
-      });
-
-      status.textContent = "Recibido. Te responderemos pronto.";
-      status.className = "form-status ok";
-      form.reset();
-    } catch (err) {
-      status.textContent = "No pudimos enviar tu mensaje. Escríbenos por WhatsApp mientras lo resolvemos.";
-      status.className = "form-status err";
-      console.error(err);
-    }
-  });
+.audience-tabs {
+  display: flex;
+  gap: 4px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 40px;
+  flex-wrap: wrap;
 }
 
-wireForm("contactForm", "formStatus");
-wireForm("blogForm", "blogFormStatus");
-
-/* ---------- Botones de PayPal (Nivel 1, 2 y 3 del curso) ----------
-   Requiere que el SDK de PayPal esté cargado en index.html con tu
-   client-id real (ver README.md, sección "Pagos"). Si el client-id
-   sigue siendo el de ejemplo, el SDK no carga y estos botones
-   simplemente no aparecen — no rompe el resto de la página. */
-if (window.paypal) {
-  const nivelesPago = [
-    { id: "paypal-nivel1", amount: "175.00" },
-    { id: "paypal-nivel2", amount: "350.00" },
-    { id: "paypal-nivel3", amount: "350.00" },
-  ];
-
-  nivelesPago.forEach(({ id, amount }) => {
-    const el = document.getElementById(id);
-    if (!el) return;
-
-    paypal.Buttons({
-      style: { layout: "horizontal", color: "gold", shape: "rect", label: "paypal", height: 40 },
-      createOrder: (data, actions) =>
-        actions.order.create({
-          purchase_units: [{ amount: { value: amount, currency_code: "USD" } }],
-        }),
-      onApprove: (data, actions) =>
-        actions.order.capture().then(() => {
-          window.location.href = "gracias.html";
-        }),
-    }).render(`#${id}`);
-  });
+.audience-tab {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-family: var(--sans);
+  font-size: 15px;
+  font-weight: 500;
+  padding: 14px 6px;
+  margin-right: 32px;
+  cursor: pointer;
+  position: relative;
+  border-bottom: 2px solid transparent;
 }
 
-// Gráfico 3D Interactivo - Ataques en Latinoamérica
-document.addEventListener("DOMContentLoaded", function() {
-    const container = document.getElementById('chart-container');
-    if (!container) return; // Si la sección no está en esta página específica, evita errores
+.audience-tab:hover { color: var(--text); }
 
-    const paises = ['México', 'Colombia', 'Brasil', 'Perú', 'Ecuador', 'Chile'];
-    const anos = ['2022', '2023', '2024', '2025'];
+.audience-tab[aria-selected="true"] {
+  color: var(--text);
+  border-bottom-color: var(--accent-strong);
+}
 
-    const zData = [
-        [274, 290, 310, 324], // México
-        [85, 92, 95, 100],   // Colombia
-        [60, 68, 75, 81],    // Brasil
-        [20, 28, 35, 48],    // Perú
-        [15, 22, 30, 42],    // Ecuador
-        [10, 14, 18, 25]     // Chile
-    ];
+.audience-panel { display: none; }
+.audience-panel.active { display: block; animation: fade-in 0.25s ease; }
 
-    let xValues = [];
-    let yValues = [];
-    let zValues = [];
-    let textValues = [];
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 
-    paises.forEach((pais, i) => {
-        anos.forEach((ano, j) => {
-            xValues.push(pais);
-            yValues.push(ano);
-            zValues.push(zData[i][j]);
-            textValues.push(`<b>${pais} (${ano})</b><br>Incidentes: ${zData[i][j]}`);
-        });
-    });
+.audience-panel h3 {
+  font-family: var(--serif);
+  font-size: 26px;
+  font-weight: 600;
+  margin: 0 0 14px;
+  max-width: 24ch;
+}
 
-    const trace = {
-        type: 'scatter3d',
-        mode: 'lines+markers',
-        x: xValues,
-        y: yValues,
-        z: zValues,
-        text: textValues,
-        hoverinfo: 'text',
-        marker: {
-            size: 8,
-            color: zValues,
-            colorscale: 'Viridis',
-            opacity: 0.9,
-            colorbar: {
-                title: '<b>Incidentes</b>',
-                titlefont: { color: '#ffffff', size: 12 },
-                tickfont: { color: '#94a3b8' },
-                len: 0.6
-            },
-            line: {
-                color: '#ffffff',
-                width: 0.5
-            }
-        },
-        line: {
-            color: '#38bdf8',
-            width: 4
-        }
-    };
+.audience-panel p {
+  color: var(--text-muted);
+  max-width: 60ch;
+  margin: 0 0 28px;
+}
 
-    const layout = {
-        paper_bgcolor: '#0b0f19',
-        plot_bgcolor: '#0b0f19',
-        margin: { l: 0, r: 0, b: 0, t: 0 },
-        scene: {
-            xaxis: {
-                title: { text: '<b>País</b>', font: { color: '#e2e8f0', size: 12 } },
-                tickfont: { color: '#cbd5e1', size: 10 },
-                gridcolor: '#1e293b',
-                zerolinecolor: '#334155'
-            },
-            yaxis: {
-                title: { text: '<b>Año</b>', font: { color: '#e2e8f0', size: 12 } },
-                tickfont: { color: '#cbd5e1', size: 10 },
-                gridcolor: '#1e293b',
-                zerolinecolor: '#334155'
-            },
-            zaxis: {
-                title: { text: '<b>N° Incidentes</b>', font: { color: '#e2e8f0', size: 12 } },
-                tickfont: { color: '#cbd5e1', size: 10 },
-                gridcolor: '#1e293b',
-                zerolinecolor: '#334155'
-            },
-            camera: {
-                eye: { x: 1.8, y: -1.8, z: 1.2 }
-            }
-        }
-    };
+/* ---------- Bloque MIRPE (metodología) ---------- */
 
-    const config = {
-        responsive: true, // Esto hace que Plotly detecte cambios de tamaño en la pantalla
-        displayModeBar: true,
-        modeBarButtonsToRemove: ['sendDataToCloud']
-    };
+.mirpe-body {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 56px;
+}
 
-    Plotly.newPlot('chart-container', [trace], layout, config);
+.mirpe-body > .lead p {
+  color: var(--text-muted);
+  margin: 0 0 18px;
+  font-size: 16px;
+}
 
-    // Forzar un reajuste automático por si el navegador carga con elementos colapsados
-    window.addEventListener('resize', function() {
-        Plotly.Plots.resize('chart-container');
-    });
-});
+.mirpe-body > .lead p:last-child { margin-bottom: 0; }
 
-// Indicador de Riesgo 3D Interactivo (Three.js)
-document.addEventListener("DOMContentLoaded", function() {
-    const container = document.getElementById('risk-3d-container');
-    if (!container) return;
+.area-list {
+  list-style: none;
+  margin: 0; padding: 0;
+  border-top: 1px solid var(--border-soft);
+}
 
-    // Respaldo por si el navegador mide 0 antes de que termine de acomodar el layout
-    const anchoInicial = container.clientWidth || 300;
-    const altoInicial = container.clientHeight || 280;
+.area-list li {
+  padding: 13px 0;
+  border-bottom: 1px solid var(--border-soft);
+  font-size: 14.5px;
+  color: var(--text);
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
 
-    // 1. Configuración de Escena, Cámara y Renderizador
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(45, anchoInicial / altoInicial, 0.1, 1000);
-    camera.position.z = 6;
+.area-list li::before {
+  content: '';
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex-shrink: 0;
+}
 
-    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-    renderer.setSize(anchoInicial, altoInicial);
-    renderer.setPixelRatio(window.devicePixelRatio);
-    container.appendChild(renderer.domElement);
+.authority-note {
+  margin-top: 24px;
+  padding: 16px 18px;
+  background: var(--surface);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+  font-size: 13px;
+  color: var(--text-dim);
+}
 
-    // 2. Iluminación ambiental y direccional para dar volumen 3D
-    const ambientLight = new THREE.AmbientLight(0xffffff, 1.2);
-    scene.add(ambientLight);
+/* ---------- Módulos SIGPE ---------- */
 
-    const pointLight = new THREE.PointLight(0xffffff, 2);
-    pointLight.position.set(5, 5, 5);
-    scene.add(pointLight);
+.module-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--border-soft);
+  border: 1px solid var(--border-soft);
+  margin-bottom: 56px;
+}
 
-    // 3. Crear el Anillo 3D (TorusGeometry) simulando el medidor de progreso (100%)
-    // Creamos un grupo para poder rotarlo suavemente
-    const ringGroup = new THREE.Group();
-    scene.add(ringGroup);
+.module-card {
+  background: var(--surface);
+  padding: 24px;
+}
 
-    // Anillo de fondo (sutil gris oscuro)
-    const bgRingGeo = new THREE.TorusGeometry(1.8, 0.12, 16, 100);
-    const bgRingMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.05 });
-    const bgRing = new THREE.Mesh(bgRingGeo, bgRingMat);
-    ringGroup.add(bgRing);
+.module-card .code {
+  font-family: var(--serif);
+  font-size: 13px;
+  color: var(--accent);
+  margin: 0 0 10px;
+}
 
-    // Anillo activo con degradado/color dinámico simulando el 73% (aprox 4.5 radianes de los 6.28 totales)
-    // Para darle un toque sofisticado de degradado, usamos un material dorado/ámbar institucional (#f59e0b)
-    const progressGeo = new THREE.TorusGeometry(1.8, 0.15, 16, 100, (73 / 100) * Math.PI * 2);
-    const progressMat = new THREE.MeshStandardMaterial({ 
-        color: 0xf59e0b, 
-        roughness: 0.3, 
-        metalness: 0.8,
-        emissive: 0xd97706,
-        emissiveIntensity: 0.2
-    });
-    const progressRing = new THREE.Mesh(progressGeo, progressMat);
-    // Centrar la rotación del arco
-    progressRing.rotation.z = Math.PI / 2;
-    ringGroup.add(progressRing);
+.module-card h4 {
+  font-size: 15.5px;
+  font-weight: 600;
+  margin: 0 0 8px;
+}
 
-    // Pequeña esfera brillante en la punta del indicador para darle dinamismo 3D
-    const tipGeo = new THREE.SphereGeometry(0.18, 32, 32);
-    const tipMat = new THREE.MeshStandardMaterial({ color: 0xfbbf24, emissive: 0xf59e0b, emissiveIntensity: 0.8 });
-    const tipMesh = new THREE.Mesh(tipGeo, tipMat);
-    ringGroup.add(tipMesh);
+.module-card p {
+  font-size: 13.5px;
+  color: var(--text-muted);
+  margin: 0;
+}
 
-    // Posicionar la esfera en el ángulo correspondiente al 73%
-    const angle = (90 / 100) * Math.PI * 2 - (Math.PI / 2);
-    tipMesh.position.x = Math.cos(angle) * 1.8;
-    tipMesh.position.y = Math.sin(angle) * 1.8;
+/* ---------- Demo escalonada ---------- */
 
-    // 4. Crear texto HTML flotante en el centro para el porcentaje (73% Bajo control)
-    let centerLabel = document.createElement('div');
-    centerLabel.style.position = 'absolute';
-    centerLabel.style.top = '50%';
-    centerLabel.style.left = '50%';
-    centerLabel.style.transform = 'translate(-50%, -50%)';
-    centerLabel.style.textAlign = 'center';
-    centerLabel.style.fontFamily = "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif";
-    centerLabel.style.pointerEvents = 'none';
-    centerLabel.innerHTML = `
-        <div style="font-size: 1.8rem; font-weight: bold; color: #f8fafc; letter-spacing: 1px;">73%</div>
-        <div style="font-size: 0.75rem; color: #94a3b8; text-transform: uppercase; margin-top: 2px;">Bajo control</div>
-    `;
-    container.style.position = 'relative';
-    container.appendChild(centerLabel);
+.demo-block {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 40px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 32px;
+}
 
-   // 5. Animación de valor dinámico (oscilando entre 15 y 95) y rotación 3D continua
-    let time = 0;
-    const centerValueElement = centerLabel.querySelector('div:first-child');
-    const centerStatusElement = centerLabel.querySelector('div:last-child');
+.demo-step .step-label {
+  font-size: 12px;
+  color: var(--accent);
+  font-weight: 600;
+  margin: 0 0 10px;
+}
 
-    function animate() {
-        requestAnimationFrame(animate);
-        
-        time += 0.008;
-        
-        // Generar un valor fluctuante cíclico entre 15 y 95 usando una onda sinusoidal
-        let dynamicRisk = Math.round(55 + Math.sin(time) * 40);
-        
-        // Actualizar el número en el texto central HTML
-        if (centerValueElement) {
-            centerValueElement.innerText = dynamicRisk + '%';
-            
-            // Cambiar dinámicamente el estado y color según el puntaje de riesgo
-            if (dynamicRisk < 40) {
-                centerStatusElement.innerText = "Bajo control";
-                centerStatusElement.style.color = "#10b981"; // Verde
-                progressMat.color.setHex(0x10b981);
-                tipMat.color.setHex(0x34d399);
-            } else if (dynamicRisk < 75) {
-                centerStatusElement.innerText = "Atención requerida";
-                centerStatusElement.style.color = "#f59e0b"; // Amarillo/Ámbar
-                progressMat.color.setHex(0xf59e0b);
-                tipMat.color.setHex(0xfbbf24);
-            } else {
-                centerStatusElement.innerText = "Nivel crítico";
-                centerStatusElement.style.color = "#ef4444"; // Rojo
-                progressMat.color.setHex(0xef4444);
-                tipMat.color.setHex(0xf87171);
-            }
-        }
+.demo-step h4 {
+  font-size: 16px;
+  margin: 0 0 10px;
+}
 
-        // Reconstruir dinámicamente la geometría del arco 3D según el nuevo porcentaje
-        const newAngleSpan = (dynamicRisk / 100) * Math.PI * 2;
-        progressRing.geometry.dispose();
-        progressRing.geometry = new THREE.TorusGeometry(1.8, 0.15, 16, 100, newAngleSpan > 0.1 ? newAngleSpan : 0.1);
+.demo-step p {
+  font-size: 13.5px;
+  color: var(--text-muted);
+  margin: 0 0 16px;
+}
 
-        // Actualizar la posición de la esfera brillante en la punta del anillo
-        const angle = newAngleSpan - (Math.PI / 2);
-        tipMesh.position.x = Math.cos(angle) * 1.8;
-        tipMesh.position.y = Math.sin(angle) * 1.8;
+.video-frame {
+  width: 100%;
+  aspect-ratio: 16/9;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-dim);
+  font-size: 13px;
+  margin-bottom: 16px;
+  text-align: center;
+  padding: 12px;
+}
 
-        // Rotación continua 3D del conjunto
-        ringGroup.rotation.y += 0.005;
-        ringGroup.rotation.x = Math.sin(time * 0.5) * 0.1;
+/* ---------- Cursos / precios ---------- */
 
-        renderer.render(scene, camera);
-    }
-    animate();
+.pricing-track {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1px;
+  background: var(--border-soft);
+  border: 1px solid var(--border-soft);
+  margin: 40px 0 32px;
+}
 
-    // 6. Adaptabilidad responsiva si cambia el tamaño de la ventana
-    window.addEventListener('resize', function() {
-        if (!container) return;
-        camera.aspect = container.clientWidth / container.clientHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize(container.clientWidth, container.clientHeight);
-    });
-});
+.price-card {
+  background: var(--surface);
+  padding: 22px 18px;
+  text-align: left;
+  position: relative;
+}
+
+.price-card.is-future { opacity: 0.75; }
+
+.price-card .stage {
+  font-size: 12px;
+  color: var(--text-dim);
+  margin: 0 0 12px;
+}
+
+.price-card .amount {
+  font-family: var(--serif);
+  font-size: 24px;
+  margin: 0 0 6px;
+}
+
+.price-card .req {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.course-includes {
+  list-style: none;
+  padding: 0; margin: 0 0 36px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px 24px;
+}
+
+.course-includes li {
+  font-size: 14.5px;
+  color: var(--text-muted);
+  padding-left: 18px;
+  position: relative;
+}
+
+.course-includes li::before {
+  content: '—';
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+}
+
+.modalities {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 36px;
+}
+
+.modality-card {
+  border-left: 2px solid var(--border);
+  padding-left: 18px;
+}
+
+.modality-card.is-team { border-left-color: var(--accent); }
+
+.modality-card h4 { margin: 0 0 8px; font-size: 15px; }
+.modality-card p { margin: 0; font-size: 13.5px; color: var(--text-muted); }
+
+/* ---------- FAQ ---------- */
+
+.faq-groups {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+}
+
+.faq-group-tab {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  padding: 9px 16px;
+  font-size: 13.5px;
+  border-radius: 999px;
+  cursor: pointer;
+  margin-right: 8px;
+}
+
+.faq-group-tab[aria-selected="true"] {
+  border-color: var(--accent);
+  color: var(--accent-strong);
+}
+
+.faq-list { display: none; }
+.faq-list.active { display: block; }
+
+.faq-item {
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.faq-question {
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 15.5px;
+  font-weight: 500;
+  padding: 20px 0;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.faq-question .icon {
+  flex-shrink: 0;
+  color: var(--accent);
+  font-size: 18px;
+  transition: transform 0.2s ease;
+}
+
+.faq-item[data-open="true"] .icon { transform: rotate(45deg); }
+
+.faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.25s ease;
+  font-size: 14.5px;
+  color: var(--text-muted);
+}
+
+.faq-answer p { margin: 0 0 20px; }
+
+.faq-pending {
+  display: inline-block;
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--risk-mid);
+  border: 1px solid var(--risk-mid);
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+/* ---------- Contacto ---------- */
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 40px;
+  align-items: start;
+}
+
+.contact-form {
+  display: grid;
+  gap: 16px;
+}
+
+.field label {
+  display: block;
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+
+.field input, .field select, .field textarea {
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  padding: 12px 14px;
+  font-family: var(--sans);
+  font-size: 14.5px;
+}
+
+.field textarea { resize: vertical; min-height: 110px; }
+
+.field input:focus, .field select:focus, .field textarea:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.form-status {
+  font-size: 13.5px;
+  min-height: 20px;
+}
+.form-status.ok { color: var(--risk-low); }
+.form-status.err { color: var(--risk-high); }
+
+.contact-channels {
+  display: grid;
+  gap: 20px;
+  align-content: start;
+}
+
+.channel-card {
+  border: 1px solid var(--border);
+  padding: 20px;
+  border-radius: var(--radius);
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.channel-card h4 { margin: 0 0 4px; font-size: 15px; }
+.channel-card p { margin: 0; font-size: 13.5px; color: var(--text-muted); }
+.channel-card a { color: var(--accent-strong); text-decoration: none; font-size: 13.5px; }
+
+/* WhatsApp flotante */
+
+.whatsapp-float {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 50;
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  background: #25D366;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+  text-decoration: none;
+}
+
+.whatsapp-float svg { width: 28px; height: 28px; }
+
+/* ---------- Footer ---------- */
+
+footer {
+  padding: 48px 0 32px;
+  border-bottom: none;
+}
+
+.footer-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.footer-links {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.footer-links a {
+  font-size: 13.5px;
+  color: var(--text-muted);
+  text-decoration: none;
+}
+.footer-links a:hover { color: var(--text); }
+
+.social-links {
+  display: flex;
+  gap: 14px;
+}
+
+.social-links a {
+  width: 36px; height: 36px;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  text-decoration: none;
+}
+.social-links a:hover { color: var(--accent-strong); border-color: var(--accent); }
+
+.footer-legal {
+  font-size: 12.5px;
+  color: var(--text-dim);
+  border-top: 1px solid var(--border-soft);
+  padding-top: 20px;
+}
+
+/* ---------- Páginas legales ---------- */
+
+.legal-page {
+  padding: 64px 0 96px;
+}
+
+.legal-page .container {
+  max-width: 760px;
+}
+
+.legal-page h1 {
+  font-family: var(--serif);
+  font-size: 32px;
+  margin: 0 0 8px;
+}
+
+.legal-page .updated {
+  color: var(--text-dim);
+  font-size: 13px;
+  margin: 0 0 32px;
+}
+
+.legal-page .draft-notice {
+  background: var(--surface);
+  border-left: 2px solid var(--risk-mid);
+  padding: 16px 18px;
+  font-size: 13.5px;
+  color: var(--text-muted);
+  margin-bottom: 40px;
+}
+
+.legal-page h2 {
+  font-family: var(--serif);
+  font-size: 20px;
+  margin: 36px 0 12px;
+}
+
+.legal-page p, .legal-page li {
+  font-size: 14.5px;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+.legal-page strong { color: var(--text); }
+
+.legal-page .back-link {
+  display: inline-block;
+  margin-top: 40px;
+  font-size: 13.5px;
+  color: var(--accent-strong);
+  text-decoration: none;
+}
+
+/* ---------- Placeholders de fotos ---------- */
+
+.photo-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin: 32px 0;
+}
+
+.photo-slot {
+  aspect-ratio: 1 / 1;
+  background: var(--surface);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 16px;
+  font-size: 13px;
+  color: var(--text-dim);
+}
+
+/* ---------- Módulos SIGPE en texto ---------- */
+
+.module-text {
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.module-text:first-of-type { border-top: 1px solid var(--border-soft); }
+
+.module-text strong {
+  color: var(--accent-strong);
+  font-family: var(--serif);
+  font-size: 15.5px;
+}
+
+.module-text span {
+  color: var(--text-muted);
+  font-size: 15px;
+}
+
+/* ---------- Quiénes somos ---------- */
+
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 40px;
+}
+
+.team-member .photo-slot { margin-bottom: 14px; aspect-ratio: 1; }
+.team-member h4 { margin: 0 0 2px; font-size: 15px; }
+.team-member p { margin: 0; font-size: 13px; color: var(--text-dim); }
+
+/* ---------- Blog ---------- */
+
+.blog-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--border-soft);
+  border: 1px solid var(--border-soft);
+  margin-bottom: 48px;
+}
+
+.blog-card { background: var(--surface); padding: 22px; }
+.blog-card .photo-slot { margin-bottom: 14px; }
+.blog-card h4 { font-size: 15px; margin: 0 0 6px; }
+.blog-card p { font-size: 13px; color: var(--text-dim); margin: 0; }
+
+.blog-submit {
+  border-top: 1px solid var(--border-soft);
+  padding-top: 40px;
+}
+
+.blog-submit h3 { font-family: var(--serif); font-size: 22px; margin: 0 0 8px; }
+.blog-submit > p { color: var(--text-muted); max-width: 60ch; margin: 0 0 28px; font-size: 14.5px; }
+
+/* ---------- Visuales tecnológicos generados por código ---------- */
+
+.tech-visual-row {
+  display: flex;
+  gap: 32px;
+  justify-content: center;
+  margin: 8px 0 44px;
+}
+
+.tech-visual { width: 160px; height: 160px; }
+.tech-visual svg { width: 100%; height: 100%; }
+
+.radar-ring { fill: none; stroke: var(--border); stroke-width: 1; }
+.radar-crosshair { stroke: var(--border); stroke-width: 1; }
+
+.radar-sweep {
+  transform-box: view-box;
+  transform-origin: 100px 100px;
+  animation: radar-spin 4s linear infinite;
+}
+@keyframes radar-spin { to { transform: rotate(360deg); } }
+
+.radar-blip {
+  fill: var(--accent-strong);
+  opacity: 0;
+  animation: radar-blip 4s ease-in-out infinite;
+}
+@keyframes radar-blip {
+  0%, 88%, 100% { opacity: 0; }
+  4%, 14% { opacity: 1; }
+}
+
+.scan-bracket { fill: none; stroke: var(--accent); stroke-width: 2; }
+
+.scan-line {
+  stroke: var(--accent-strong);
+  stroke-width: 1.5;
+  opacity: 0.85;
+  animation: scan-move 3s ease-in-out infinite;
+}
+@keyframes scan-move {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(160px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .radar-sweep, .scan-line { animation: none; }
+}
+
+/* ---------- Opciones de pago (PayPal / Mercado Pago) ---------- */
+
+.payment-options {
+  margin-top: 40px;
+  border-top: 1px solid var(--border-soft);
+  padding-top: 32px;
+}
+
+.payment-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.payment-info h4 { margin: 0 0 4px; font-size: 15.5px; }
+.payment-info p { margin: 0; font-size: 13.5px; color: var(--text-muted); }
+
+.payment-buttons {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.paypal-slot { min-width: 140px; }
+
+.payment-note {
+  margin: 18px 0 0;
+  font-size: 12.5px;
+  color: var(--text-dim);
+}
+
+/* ---------- Sellos de pago y estándares ---------- */
+
+.trust-badges {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 32px;
+  border-top: 1px solid var(--border-soft);
+  padding-top: 24px;
+  margin-bottom: 20px;
+}
+
+.badge-label {
+  font-size: 12px;
+  color: var(--text-dim);
+  margin: 0 0 10px;
+}
+
+.badge-row { display: flex; gap: 12px; flex-wrap: wrap; }
+
+.badge-slot {
+  width: 120px;
+  height: 40px;
+  background: var(--surface);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  color: var(--text-dim);
+  text-align: center;
+  padding: 4px;
+}
+
+.standard-chip {
+  font-size: 12px;
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 6px 14px;
+}
+
+#quienes-somos .section-head { max-width: none; }
+
+/* ---------- Quiénes somos: foto + texto ---------- */
+
+.quienes-body {
+  display: grid;
+  grid-template-columns: 0.5fr 1.6fr;
+  gap: 40px;
+  align-items: start;
+  margin-top: 8px;
+}
+
+.quienes-photos {
+  display: grid;
+  gap: 20px;
+}
+
+.quienes-body .lead h3 {
+  font-family: var(--serif);
+  font-size: 19px;
+  margin: 28px 0 12px;
+}
+.quienes-body .lead h3:first-child { margin-top: 0; }
+
+.quienes-body .lead p {
+  color: var(--text-muted);
+  font-size: 15px;
+  margin: 0 0 16px;
+}
+
+/* El formulario de "publicar en el blog" ocupa solo la mitad del ancho */
+.blog-submit .contact-form { max-width: 50%; }
+
+/* ---------- Columna de visuales del hero (barras + circular, asimétrico) ---------- */
+
+.hero-visuals {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.risk-gauge-card {
+  background-color: #0b0f19;
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid #1e293b;
+  width: 300px;
+  max-width: 100%;
+  box-sizing: border-box;
+  align-self: flex-start;
+}
+
+/* ---------- Imágenes dentro de cuadros 1:1 ---------- */
+
+img.photo-slot {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  padding: 0;
+  border-style: solid;
+  display: block;
+}
+
+/* ---------- Hero: fotos 1:1 | gráfico de barras | gráfico circular + foto ---------- */
+
+.hero-media {
+  display: grid;
+  grid-template-columns: minmax(0, 300px) minmax(0, 1fr) 300px;
+  gap: 40px;
+  align-items: start;
+}
+
+.hero-photos, .hero-side {
+  display: grid;
+  gap: 20px;
+}
+
+.hero-side .risk-gauge-card { width: 100%; }
+
+/* Se conserva el ancho original de lo que no se debía modificar */
+#audiencia .container { max-width: 1120px; }
+.blog-submit { max-width: 1064px; margin: 0 auto; }
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 860px) {
+  .main-nav { display: none; }
+  .nav-toggle { display: block; }
+
+  .hero h1 { font-size: 30px; }
+  .hero-media { grid-template-columns: minmax(0, 1fr); }
+  .hero-chart { order: -1; }
+  .hero-photos { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .hero-side { max-width: 340px; margin: 0 auto; width: 100%; }
+  .risk-gauge-card { align-self: center; }
+
+  .mirpe-body { grid-template-columns: 1fr; }
+  .quienes-body { grid-template-columns: 1fr; }
+  .quienes-photos { grid-template-columns: 1fr 1fr; }
+  .blog-submit .contact-form { max-width: 100%; }
+  .photo-grid { grid-template-columns: 1fr; }
+  .team-grid { grid-template-columns: 1fr; }
+  .blog-grid { grid-template-columns: 1fr; }
+  .module-grid { grid-template-columns: 1fr 1fr; }
+  .demo-block { grid-template-columns: 1fr; }
+  .pricing-track { grid-template-columns: 1fr 1fr; }
+  .course-includes { grid-template-columns: 1fr; }
+  .modalities { grid-template-columns: 1fr; }
+  .payment-row { flex-direction: column; align-items: flex-start; }
+  .contact-grid { grid-template-columns: 1fr; gap: 40px; }
+}
+
+@media (max-width: 520px) {
+  .module-grid { grid-template-columns: 1fr; }
+  .pricing-track { grid-template-columns: 1fr 1fr; }
+}
